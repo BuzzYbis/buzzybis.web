@@ -1,0 +1,12 @@
+[package]
+name = "typst-watch"
+version = "0.1.0"
+authors = ["BuzzY_ <contact@buzzybis.com>"]
+edition = "2024"
+
+
+[dependencies]
+notify = { workspace = true }
+walkdir = { workspace = true }
+log = { workspace = true }
+env_logger = { workspace = true }
