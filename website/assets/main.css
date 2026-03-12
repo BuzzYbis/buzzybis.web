@@ -44,6 +44,14 @@ body {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
+    position: relative;
+}
+
+.eng-sidebar.collapsed {
+    width: 0px; /* Shrinks to just the width of the button */
+    padding: 0em;
+    pointer-events: none;
+    opacity: 0;
 }
 
 .eng-brand {
@@ -111,6 +119,28 @@ body {
     flex-direction: column;
     max-height: 100%;
     overflow: hidden;
+}
+
+.toggle-btn {
+    cursor: pointer;
+    background: 0 0;
+    border: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    position: absolute;
+    left: calc(200px + 6em);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.toggle-btn:hover {
+    background: #e2e8f0;
+    border-radius: 100%;
+}
+
+.toggle-btn.collapsed {
+    left: 0em;
 }
 
 /* --- PHOTOGRAPHY LAYOUT (Header) --- */
