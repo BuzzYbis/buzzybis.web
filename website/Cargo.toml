@@ -1,0 +1,27 @@
+[package]
+name = "website"
+version = "0.1.0"
+authors = ["BuzzY_ <contact@buzzybis.com>"]
+edition = "2024"
+
+
+[dependencies]
+dioxus = { version = "0.7.1", features = ["router", "fullstack"] }
+dioxus-logger = "0.7.3"
+serde = { version = "1.0.228", features = ["derive"] }
+http = "1.4.0"
+server_fn = "0.8.11"
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+lopdf = "0.39.0"
+
+[build-dependencies]
+walkdir = { workspace = true }
+log = { workspace = true }
+env_logger = { workspace = true }
+
+[features]
+default = ["web"]
+web = ["dioxus/web"]
+desktop = ["dioxus/desktop"]
+mobile = ["dioxus/mobile"]
+server = ["dioxus/server"]

@@ -1,0 +1,51 @@
+.entry-list {
+    display: grid;
+    grid-template-columns: calc(50% - 0.5em) calc(50% - 0.5em);
+    justify-content: space-between;
+    gap: 1em;
+    overflow-y: auto;
+    padding-right: 0.2em;
+}
+
+.entry-box {
+    border-radius: 0.5em;
+    border: 1.5px solid black;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5em;
+    align-items: baseline;
+    text-decoration: none;
+    color: #000;
+    background-color: #eeeeee;
+    position: relative;
+}
+
+.entry-box h2,
+.entry-box p {
+    margin: 0;
+}
+
+.entry-box p {
+    margin-top: 0.5em;
+}
+
+.title {
+    flex: 1;
+}
+
+.metadata {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.tag-pill {
+    margin-right: 0.5em;
+    border-radius: 0.2em;
+    padding: 0.1em 0.4em;
+    font-size: 10pt;
+    background-color: rgba(0, 184, 217, 0.16);
+    color: #006c9c;
+}

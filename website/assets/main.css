@@ -1,0 +1,181 @@
+/* --- VARIABLES --- */
+@import url("https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+html {
+    height: 100%;
+}
+
+body {
+    font-family: "Atkinson Hyperlegible", sans-serif;
+    height: 100%;
+    margin: 0;
+}
+
+#main {
+    height: 100%;
+}
+
+:root {
+    --sidebar-w: 200px;
+    --eng-bg: #ffffff;
+    --eng-text: #1a1a1a;
+    --eng-accent: #0055ff;
+
+    --photo-bg: #ffffff;
+    --photo-text: #000000;
+    --photo-accent: #ff4500;
+
+    --border-color: #eaeaea;
+}
+
+/* --- ENGINEERING LAYOUT (Sidebar) --- */
+.eng-layout {
+    display: flex;
+    height: 100%;
+    background-color: var(--eng-bg);
+    color: var(--eng-text);
+}
+
+.eng-sidebar {
+    width: var(--sidebar-w);
+    top: 0;
+    border-right: 1px solid var(--border-color);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.eng-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    letter-spacing: -0.5px;
+    text-decoration: none;
+    color: black;
+    padding-left: 0.2em;
+}
+
+.eng-nav-list::before,
+.eng-nav-list::after {
+    content: "";
+    height: 1px;
+    width: 100%;
+    background-color: black;
+}
+
+.eng-nav-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.eng-nav-list a {
+    color: #666;
+    font-weight: 500;
+    transition: color 0.2s;
+    display: block;
+    text-decoration: none;
+    padding-left: 0.2em;
+}
+
+.eng-nav-list a:hover,
+.eng-nav-list a.active {
+    color: var(--eng-accent);
+}
+
+.eng-footer {
+    margin-top: auto;
+}
+
+.context-switch-btn {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #444;
+    text-decoration: none;
+    padding-left: 0.2em;
+    padding-top: 1em;
+}
+.context-switch-btn:hover {
+    color: var(--photo-accent);
+}
+
+.eng-content {
+    flex: 1;
+    padding: 1rem 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    overflow: hidden;
+}
+
+/* --- PHOTOGRAPHY LAYOUT (Header) --- */
+.photo-layout {
+    min-height: 100vh;
+    background-color: var(--photo-bg);
+    color: var(--photo-text);
+    display: flex;
+    flex-direction: column;
+}
+
+.photo-header {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 3rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+}
+.photo-header:hover {
+    border-bottom-color: var(--border-color);
+}
+
+.photo-brand {
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+}
+
+.photo-nav-links {
+    display: flex;
+    gap: 2.5rem;
+}
+
+.photo-nav-links a {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #888;
+    font-weight: 600;
+}
+
+.photo-nav-links a:hover,
+.photo-nav-links a.active {
+    color: #000;
+}
+
+.switch-link {
+    font-size: 0.8rem;
+    color: #bbb;
+    border-bottom: 1px solid transparent;
+}
+.switch-link:hover {
+    color: var(--eng-accent);
+    border-color: var(--eng-accent);
+}
+
+.photo-content {
+    flex: 1;
+    width: 100%;
+}

@@ -1,0 +1,110 @@
+.master {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* The Master Container */
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5em;
+    padding: 0.5em 2em 0.5em 2em;
+    max-width: 1000px;
+    margin: 0 auto;
+    align-items: center;
+    overflow: hidden;
+    flex: 1;
+    padding-bottom: 1.5em;
+}
+
+/* The Shared Box Style */
+.content-box {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    margin-left: 2em;
+    margin-right: 2em;
+    overflow-y: auto;
+}
+
+/* Box 1 Specifics */
+.profile-box {
+    text-align: center;
+    align-content: center;
+}
+
+.profile-box h1,
+h2 {
+    margin: 0;
+}
+
+.profile-name {
+    font-size: 2.5rem;
+    color: #0f172a;
+}
+.profile-work {
+    font-size: 1.25rem;
+    color: #475569;
+    font-weight: 500;
+}
+.profile-motto {
+    margin: 0;
+    font-style: italic;
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
+/* Box 2 Specifics */
+.text-box p {
+    margin: 0;
+    line-height: 1.6;
+    color: #334155;
+    font-size: 1.1rem;
+    text-align: justify;
+    padding: 1em;
+}
+
+/* Box 3 Specifics */
+.links-box {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    margin-top: auto;
+    align-self: center;
+    padding-bottom: 0.5em;
+}
+
+/* Button Styling */
+.link-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* The strict square dimensions */
+    min-width: 44px;
+    height: 44px;
+    padding: 0;
+
+    /* Clean white aesthetic */
+    background-color: #f8fafc;
+    color: #0f172a;
+    text-decoration: none;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px; /* Gives the square soft, rounded corners */
+    transition: all 0.2s ease;
+}
+
+.link-btn svg {
+    padding: 0.5em;
+}
+.link-btn p {
+    padding-right: 0.5em;
+}
+
+.link-btn:hover {
+    background-color: #e2e8f0;
+    transform: translateY(-2px); /* Gives a nice little "lift" effect when hovered */
+}
