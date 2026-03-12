@@ -1,14 +1,13 @@
 use dioxus::prelude::*;
 
-
 mod eng;
 mod error;
 mod get_file_list;
-mod photo;
+mod statics;
 
 use crate::{
     eng::{BlogIndex, BlogPost, EngHome, ProjectDetail, Projects},
-    photo::{Gallery, PhotoAbout, PhotoHome, Portfolio},
+    statics::svg::SideBarIcon,
 };
 
 
@@ -40,19 +39,6 @@ enum Route {
         #[end_nest]
     #[end_layout]
 
-    #[nest("/photo")]
-        #[layout(PhotoLayout)]
-            #[route("/")]
-            PhotoHome {},
-            #[route("/about")]
-            PhotoAbout {},
-            #[route("/portfolio")]
-            Portfolio {},
-            #[route("/gallery/:category")]
-            Gallery { category: String },
-        #[end_layout]
-    #[end_nest]
-
     #[route("/under_construction")]
     UnderConstruction {},
     #[route("/:..route")]
@@ -65,8 +51,8 @@ enum Route {
 #[component]
 fn App() -> Element {
     rsx! {
-        // Global CSS injection
-        document::Stylesheet { href: asset!("/assets/main.css") }
+        document::Link { rel: "icon", href: FAVICON }
+        document::Stylesheet { href: MAIN_CSS }
         Router::<Route> {}
     }
 }
@@ -80,31 +66,9 @@ fn EngLayout() -> Element {
         div { class: "eng-layout",
             button {
                 class: if is_collapsed() { "toggle-btn collapsed" } else { "toggle-btn" },
-                // Flip the boolean when clicked
+                
                 onclick: move |_| is_collapsed.toggle(),
-
-                // Change the icon/text based on state
-                if is_collapsed() {
-                    svg {
-                        xmlns: "http://www.w3.org/2000/svg",
-                        width: "20",
-                        height: "20",
-                        fill: "currentColor",
-                        class: "bi bi-layout-sidebar",
-                        view_box: "0 0 16 16",
-                        path { d: "M0 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5-1v12h9a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zM4 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h2z" }
-                    }
-                } else {
-                    svg {
-                        xmlns: "http://www.w3.org/2000/svg",
-                        width: "20",
-                        height: "20",
-                        fill: "currentColor",
-                        class: "bi bi-layout-sidebar",
-                        view_box: "0 0 16 16",
-                        path { d: "M0 3a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5-1v12h9a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zM4 2H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h2z" }
-                    }
-                }
+                SideBarIcon {}
             }
 
             nav {
@@ -132,39 +96,10 @@ fn EngLayout() -> Element {
                     to: "mailto:contact@buzzybis.com", "contact@buzzybis.com"
                 }
             }
+            
             main { class: "eng-content",
                 Outlet::<Route> {}
             }
-        }
-    }
-}
-
-#[component]
-fn PhotoLayout() -> Element {
-    rsx! {
-        div { class: "photo-layout",
-            // // Top Header
-            // nav { class: "photo-header",
-            //     div { class: "photo-brand",
-            //         Link { to: Route::PhotoHome {}, "Ugo Gosso photography" }
-            //     }
-
-            //     div { class: "photo-nav-links",
-            //         Link { to: Route::Portfolio {}, "Portfolio" }
-            //         Link { to: Route::Gallery { category: "street".into() }, "Street" }
-            //         Link { to: Route::Gallery { category: "sport".into() }, "Sport" }
-            //     }
-
-            //     div { class: "photo-context-switch",
-            //         Link {
-            //             to: Route::EngHome {},
-            //             class: "switch-link",
-            //             "Goto engineering side"
-            //         }
-            //     }
-            // }
-            // // Content Outlet
-            // main { class: "photo-content", Outlet::<Route> {} }
         }
     }
 }
