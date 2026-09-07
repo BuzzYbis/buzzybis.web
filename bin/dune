@@ -1,0 +1,11 @@
+(executable
+ (name fetch)
+ (modules fetch)
+ (libraries buzzybis_web)
+ (flags :standard -w +A-4-44-48))
+
+(executable
+ (name serve)
+ (modules serve)
+ (libraries buzzybis_web)
+ (flags :standard -w +A-4-44-48))

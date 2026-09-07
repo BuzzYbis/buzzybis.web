@@ -1,0 +1,16 @@
+# BuzzYbis Projects Configuration
+# Configure ONLY the repositories you want to track and publish.
+
+[settings]
+# Directory where generated project HTML pages are stored (outside the repository)
+# Configured outside the site repository and generated from this file in production.
+projects_dir = "../buzzybis_projects"
+# Periodic polling interval in seconds when running with --watch (default: 300)
+poll_interval = 300
+
+[os-ads]
+title = "Omnium Scientia — Algorithm & Data Structure"
+description = "This is the algorithms and data structure course from the Omnium Scientia project that aim to build free learning material on computer science."
+collaborators = ["BuzzYbis"]
+repo = "https://github.com/Omnium-Scientia/A-DS"
+tags = ["alg", "data structure", "learning", "theory"]

@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BuzzYbis</title>
+  <link rel="stylesheet" href="/assets/css/fonts.css">
+  <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+
+<body>
+  <div class="site-wrapper">
+    <header class="site-header">
+      <div class="nav-container">
+        <a href="/" class="site-logo" id="nav-logo">
+          <span>BuzzYbis</span>
+        </a>
+        <nav class="site-nav" aria-label="Main Navigation">
+          <a href="/" class="nav-link" id="nav-home">Home</a>
+          <a href="/project/" class="nav-link" id="nav-projects">Projects</a>
+          <a href="/resume.pdf" class="nav-link" target="_blank" rel="noopener noreferrer"
+            id="nav-resume">Resume</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="content">
+      <!-- Soupault inserts page body here -->
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-content">
+        <p class="footer-left">
+          <span>&copy; 2026 BuzzYbis &middot; Built with Soupault (OCaml) &amp; Typst 0.15.1</span>
+        </p>
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a href="https://github.com/BuzzYbis" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="/project/">Projects</a>
+          <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
+        </nav>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Floating Menu Bar (Right side, matching TOC and Back to Top style) -->
+  <nav class="floating-nav-sidebar" id="floating-nav" aria-label="Floating Navigation">
+    <div class="floating-nav-card">
+      <a href="/" class="floating-nav-brand" title="BuzzYbis">BuzzYbis</a>
+      <span class="floating-nav-divider" aria-hidden="true"></span>
+      <div class="floating-nav-links">
+        <a href="/" class="floating-nav-link" id="floating-nav-home">Home</a>
+        <a href="/project/" class="floating-nav-link" id="floating-nav-projects">Projects</a>
+        <a href="/resume.pdf" class="floating-nav-link" target="_blank" rel="noopener noreferrer" id="floating-nav-resume">Resume</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Back to top floating button (matching TOC style) -->
+  <button type="button" class="back-to-top-btn" id="back-to-top" aria-label="Back to top" title="Back to top">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="12" y1="19" x2="12" y2="5"></line>
+      <polyline points="5 12 12 5 19 12"></polyline>
+    </svg>
+    <span>Back to top</span>
+  </button>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const path = window.location.pathname;
+      if (path === '/' || path === '/index.html') {
+        document.getElementById('nav-home')?.classList.add('active');
+        document.getElementById('floating-nav-home')?.classList.add('active');
+      } else if (path.startsWith('/project')) {
+        document.getElementById('nav-projects')?.classList.add('active');
+        document.getElementById('floating-nav-projects')?.classList.add('active');
+      }
+
+      // Floating menu visibility on scroll (appears when header is scrolled past)
+      const floatingNav = document.getElementById('floating-nav');
+      if (floatingNav) {
+        const updateFloatingNav = () => {
+          if (window.scrollY > 120) {
+            floatingNav.classList.add('is-visible');
+          } else {
+            floatingNav.classList.remove('is-visible');
+          }
+        };
+        window.addEventListener('scroll', updateFloatingNav, { passive: true });
+        updateFloatingNav();
+      }
+
+      // External links open in a new tab/page
+      // Dual strategy:
+      // 1. Initial DOM pass ensures existing links have target/rel attributes for accessibility & static state.
+      // 2. Delegated capture listener ensures dynamically created or modified links also open externally.
+      const makeExternalLinksOpenNewTab = () => {
+        document.querySelectorAll('a').forEach(a => {
+          const href = a.getAttribute('href');
+          if (!href) return;
+          if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//')) {
+            try {
+              const url = new URL(href, window.location.href);
+              if (url.origin !== window.location.origin) {
+                a.setAttribute('target', '_blank');
+                a.setAttribute('rel', 'noopener noreferrer');
+              }
+            } catch (e) {
+              a.setAttribute('target', '_blank');
+              a.setAttribute('rel', 'noopener noreferrer');
+            }
+          }
+        });
+      };
+      makeExternalLinksOpenNewTab();
+
+      // Catch any dynamically clicked links or delegated clicks
+      document.addEventListener('click', (e) => {
+        const a = e.target.closest('a');
+        if (!a) return;
+        const href = a.getAttribute('href');
+        if (!href) return;
+        if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//')) {
+          try {
+            const url = new URL(href, window.location.href);
+            if (url.origin !== window.location.origin) {
+              a.setAttribute('target', '_blank');
+              a.setAttribute('rel', 'noopener noreferrer');
+            }
+          } catch (err) {
+            a.setAttribute('target', '_blank');
+            a.setAttribute('rel', 'noopener noreferrer');
+          }
+        }
+      }, true);
+
+      // Back to Top floating button handler
+      const backToTopBtn = document.getElementById('back-to-top');
+      const footerCopyright = document.querySelector('.site-footer .footer-left');
+
+      if (backToTopBtn) {
+        const updateBackToTop = () => {
+          if (window.scrollY > 300) {
+            backToTopBtn.classList.add('is-visible');
+          } else {
+            backToTopBtn.classList.remove('is-visible');
+          }
+
+          if (footerCopyright) {
+            const copyrightRect = footerCopyright.getBoundingClientRect();
+            const copyrightCenterFromBottom = window.innerHeight - (copyrightRect.top + copyrightRect.height / 2);
+            const btnHalfHeight = (backToTopBtn.offsetHeight || 38) / 2;
+            const defaultBottom = 32;
+
+            if (copyrightCenterFromBottom > defaultBottom + btnHalfHeight) {
+              const alignedBottom = copyrightCenterFromBottom - btnHalfHeight;
+              backToTopBtn.style.bottom = `${alignedBottom}px`;
+            } else {
+              backToTopBtn.style.bottom = '';
+            }
+          }
+        };
+
+        window.addEventListener('scroll', updateBackToTop, { passive: true });
+        window.addEventListener('resize', updateBackToTop, { passive: true });
+        updateBackToTop();
+
+        backToTopBtn.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+
+      // Blogpost Navigation: Right-side Floating TOC
+      const blogpost = document.querySelector('article.blogpost');
+      const mainToc = document.querySelector('article.blogpost nav[role="doc-toc"]');
+
+      if (blogpost && mainToc) {
+        // Parse TOC tree from mainToc preserving depth and hierarchy
+        const extractTocItems = (container) => {
+          const topList = container.querySelector('ol, ul');
+          if (!topList) return [];
+
+          const parseList = (listEl, depth) => {
+            const listItems = [];
+            const children = Array.from(listEl.children);
+            children.forEach(li => {
+              if (li.tagName.toLowerCase() !== 'li') return;
+              const a = li.querySelector(':scope > a, :scope > div > a, a');
+              if (!a) return;
+              const href = a.getAttribute('href');
+              if (!href || !href.startsWith('#')) return;
+
+              let text = a.textContent.replace(/\s+/g, ' ').trim();
+              if (!text) return;
+              if (!/^\d+(\.\d+)*\./.test(text)) {
+                const targetEl = document.getElementById(href.substring(1));
+                if (targetEl) {
+                  const headingText = targetEl.textContent.replace(/\s+/g, ' ').trim();
+                  if (/^\d+(\.\d+)*\./.test(headingText)) {
+                    text = headingText;
+                  }
+                }
+              }
+
+              const item = {
+                href,
+                id: href.substring(1),
+                text,
+                depth,
+                children: []
+              };
+
+              const subList = li.querySelector(':scope > ol, :scope > ul, ol, ul');
+              if (subList && subList !== listEl) {
+                item.children = parseList(subList, depth + 1);
+              }
+
+              listItems.push(item);
+            });
+            return listItems;
+          };
+
+          return parseList(topList, 1);
+        };
+
+        const tocItems = extractTocItems(mainToc);
+        if (tocItems.length > 0) {
+          const sidebar = document.createElement('aside');
+          sidebar.className = 'floating-toc-sidebar';
+          sidebar.id = 'floating-toc-sidebar';
+          sidebar.setAttribute('aria-label', 'Table of Contents');
+
+          const card = document.createElement('div');
+          card.className = 'floating-toc-card';
+          card.id = 'floating-toc-card';
+
+          const header = document.createElement('div');
+          header.className = 'floating-toc-header';
+
+          const titleWrap = document.createElement('div');
+          titleWrap.className = 'floating-toc-header-title';
+          titleWrap.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="8" y1="6" x2="21" y2="6"></line>
+              <line x1="8" y1="12" x2="21" y2="12"></line>
+              <line x1="8" y1="18" x2="21" y2="18"></line>
+              <line x1="3" y1="6" x2="3.01" y2="6"></line>
+              <line x1="3" y1="12" x2="3.01" y2="12"></line>
+              <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>
+            <span>Contents</span>
+          `;
+
+          const toggleBtn = document.createElement('button');
+          toggleBtn.type = 'button';
+          toggleBtn.className = 'floating-toc-manual-toggle';
+          toggleBtn.id = 'floating-toc-manual-toggle';
+          toggleBtn.setAttribute('aria-label', 'Collapse Table of Contents');
+          toggleBtn.title = 'Collapse Table of Contents';
+          toggleBtn.innerHTML = `
+            <svg class="toggle-icon-collapse" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <svg class="toggle-icon-expand" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          `;
+
+          header.appendChild(titleWrap);
+          header.appendChild(toggleBtn);
+          card.appendChild(header);
+
+          const body = document.createElement('div');
+          body.className = 'floating-toc-body';
+          const ul = document.createElement('ul');
+          ul.className = 'floating-toc-list';
+
+          const renderItems = (items) => {
+            items.forEach(item => {
+              const li = document.createElement('li');
+              li.className = `floating-toc-item depth-${item.depth}`;
+              const a = document.createElement('a');
+              a.className = `floating-toc-link depth-${item.depth}`;
+              a.href = item.href;
+              a.textContent = item.text;
+              a.setAttribute('data-target', item.id);
+
+              a.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetEl = document.getElementById(item.id);
+                if (targetEl) {
+                  const headerOffset = 70;
+                  const elPosition = targetEl.getBoundingClientRect().top + window.scrollY;
+                  window.scrollTo({
+                    top: elPosition - headerOffset,
+                    behavior: 'smooth'
+                  });
+                  history.replaceState(null, null, item.href);
+                }
+              });
+
+              li.appendChild(a);
+              ul.appendChild(li);
+
+              if (item.children && item.children.length > 0) {
+                renderItems(item.children);
+              }
+            });
+          };
+
+          renderItems(tocItems);
+          body.appendChild(ul);
+          card.appendChild(body);
+          sidebar.appendChild(card);
+          document.body.appendChild(sidebar);
+
+          // Manual toggle state
+          let isManuallyCollapsed = window.innerWidth <= 768;
+
+          const setManualCollapsed = (collapsed) => {
+            isManuallyCollapsed = collapsed;
+            const collapseIcon = toggleBtn.querySelector('.toggle-icon-collapse');
+            const expandIcon = toggleBtn.querySelector('.toggle-icon-expand');
+            if (isManuallyCollapsed) {
+              sidebar.classList.add('is-collapsed');
+              if (collapseIcon) collapseIcon.style.display = 'none';
+              if (expandIcon) expandIcon.style.display = 'block';
+              toggleBtn.setAttribute('aria-label', 'Expand Table of Contents');
+              toggleBtn.title = 'Expand Table of Contents';
+            } else {
+              sidebar.classList.remove('is-collapsed');
+              if (collapseIcon) collapseIcon.style.display = 'block';
+              if (expandIcon) expandIcon.style.display = 'none';
+              toggleBtn.setAttribute('aria-label', 'Collapse Table of Contents');
+              toggleBtn.title = 'Collapse Table of Contents';
+            }
+          };
+
+          if (isManuallyCollapsed) {
+            setManualCollapsed(true);
+          }
+
+          toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setManualCollapsed(!isManuallyCollapsed);
+          });
+
+          // Clicking header when collapsed expands it
+          header.addEventListener('click', () => {
+            if (isManuallyCollapsed) {
+              setManualCollapsed(false);
+            }
+          });
+
+          // Automatic toggle/untoggle when main TOC is on screen:
+          // "the TOC box will toggle and untoggle automatically when the main TOC is on the screen"
+          const updateVisibility = () => {
+            const rect = mainToc.getBoundingClientRect();
+            // Main TOC is on screen if any part of it is within viewport
+            const isMainTocOnScreen = rect.bottom > 0 && rect.top < window.innerHeight;
+
+            if (isMainTocOnScreen) {
+              // Main TOC is visible on the screen -> untoggle (hide) floating TOC
+              sidebar.classList.remove('is-visible');
+            } else {
+              // Main TOC is not on screen:
+              // Show floating TOC if scrolled down past the header area
+              if (window.scrollY > 150) {
+                sidebar.classList.add('is-visible');
+              } else {
+                sidebar.classList.remove('is-visible');
+              }
+            }
+          };
+
+          window.addEventListener('scroll', updateVisibility, { passive: true });
+          window.addEventListener('resize', updateVisibility, { passive: true });
+          updateVisibility();
+
+          // Scrollspy: active heading tracking
+          const tocLinks = sidebar.querySelectorAll('.floating-toc-link');
+          const headingTargets = Array.from(tocLinks).map(link => {
+            const id = link.getAttribute('data-target');
+            return { id, link, el: document.getElementById(id) };
+          }).filter(item => item.el !== null);
+
+          const updateActiveHeading = () => {
+            if (!sidebar.classList.contains('is-visible')) return;
+            const scrollPos = window.scrollY + 120;
+            let current = null;
+
+            for (let i = 0; i < headingTargets.length; i++) {
+              const top = headingTargets[i].el.getBoundingClientRect().top + window.scrollY;
+              if (top <= scrollPos) {
+                current = headingTargets[i];
+              } else {
+                break;
+              }
+            }
+
+            tocLinks.forEach(l => l.classList.remove('is-active'));
+            if (current) {
+              current.link.classList.add('is-active');
+              const linkRect = current.link.getBoundingClientRect();
+              const bodyRect = body.getBoundingClientRect();
+              if (linkRect.top < bodyRect.top || linkRect.bottom > bodyRect.bottom) {
+                current.link.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+              }
+            }
+          };
+
+          window.addEventListener('scroll', updateActiveHeading, { passive: true });
+          updateActiveHeading();
+        }
+      }
+
+      // Tag-Based Article Research & Filtering
+      const initArticleTagResearch = () => {
+        const lists = document.querySelectorAll('.post-preview-list');
+        if (!lists.length) return;
+
+        lists.forEach((list, listIdx) => {
+          const cards = Array.from(list.querySelectorAll('.post-preview-card'));
+          if (!cards.length) return;
+
+          // Build unique tag index for this list of articles
+          const tagCounts = new Map();
+          const totalArticles = cards.length;
+
+          cards.forEach((card, cardIdx) => {
+            card.setAttribute('data-article-id', String(cardIdx));
+
+            // Extract all tags from the card (from .badge or .post-preview-tags)
+            const badgeEls = Array.from(card.querySelectorAll('.post-preview-tags .badge, .badge'));
+            const cardTags = new Set();
+            badgeEls.forEach(badge => {
+              const rawTag = badge.textContent.replace(/^#/, '').trim().toLowerCase();
+              if (rawTag) {
+                cardTags.add(rawTag);
+                badge.classList.add('tag-badge-clickable');
+                badge.setAttribute('title', `Filter by ${rawTag}`);
+              }
+            });
+
+            const tagsArray = Array.from(cardTags);
+            card.setAttribute('data-tags', tagsArray.join(' '));
+
+            // Index title, subtitle, and excerpt text for search matching
+            const title = (card.querySelector('.post-preview-title')?.textContent || '').toLowerCase();
+            const subtitle = (card.querySelector('.post-preview-subtitle')?.textContent || '').toLowerCase();
+            const excerpt = (card.querySelector('.post-preview-excerpt')?.textContent || '').toLowerCase();
+            card.setAttribute('data-search-text', `${title} ${subtitle} ${excerpt} ${tagsArray.join(' ')}`);
+
+            tagsArray.forEach(t => {
+              tagCounts.set(t, (tagCounts.get(t) || 0) + 1);
+            });
+          });
+
+          const sortedTags = Array.from(tagCounts.keys()).sort((a, b) => {
+            const countDiff = (tagCounts.get(b) || 0) - (tagCounts.get(a) || 0);
+            if (countDiff !== 0) return countDiff;
+            return a.localeCompare(b);
+          });
+
+          // Create research interface container
+          const researchContainer = document.createElement('div');
+          researchContainer.className = 'article-tag-research';
+          researchContainer.id = `tag-research-${listIdx}`;
+
+          // Search bar row with search input and counter
+          const searchRow = document.createElement('div');
+          searchRow.className = 'tag-research-bar';
+          searchRow.innerHTML = `
+            <div class="tag-search-box">
+              <svg class="icon-search" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" class="tag-search-input" placeholder="Search by tag or keyword (e.g. draft, rust)..." aria-label="Search articles by tag or keyword">
+              <button type="button" class="tag-search-clear" aria-label="Clear search" title="Clear">&times;</button>
+            </div>
+            <div class="tag-results-counter">
+              <span class="count-text">${totalArticles} article${totalArticles > 1 ? 's' : ''}</span>
+            </div>
+          `;
+
+          // Pills row
+          const pillsRow = document.createElement('div');
+          pillsRow.className = 'tag-pills-row';
+          pillsRow.innerHTML = `
+            <span class="tag-pills-label">Tags:</span>
+            <div class="tag-pills-scroll">
+              <button type="button" class="tag-pill is-active" data-tag="all">
+                <span>All</span>
+                <span class="tag-pill-count">${totalArticles}</span>
+              </button>
+            </div>
+          `;
+
+          const pillsScroll = pillsRow.querySelector('.tag-pills-scroll');
+          sortedTags.forEach(tag => {
+            const count = tagCounts.get(tag);
+            const pill = document.createElement('button');
+            pill.type = 'button';
+            pill.className = 'tag-pill';
+            pill.setAttribute('data-tag', tag);
+            pill.innerHTML = `<span>${tag}</span><span class="tag-pill-count">${count}</span>`;
+            pillsScroll.appendChild(pill);
+          });
+
+          // Empty state container
+          const emptyState = document.createElement('div');
+          emptyState.className = 'tag-no-results';
+          emptyState.style.display = 'none';
+          emptyState.innerHTML = `
+            <p class="tag-no-results-msg">No articles found matching the current tag filter.</p>
+            <button type="button" class="btn btn-outline btn-sm tag-reset-btn">Clear Filter</button>
+          `;
+
+          researchContainer.appendChild(searchRow);
+          if (sortedTags.length > 0) {
+            researchContainer.appendChild(pillsRow);
+          }
+          researchContainer.appendChild(emptyState);
+
+          // Insert researchContainer directly before the article list
+          list.parentNode.insertBefore(researchContainer, list);
+
+          // Filter State
+          let selectedTag = 'all';
+          let searchQuery = '';
+
+          const searchInput = searchRow.querySelector('.tag-search-input');
+          const searchClear = searchRow.querySelector('.tag-search-clear');
+          const countDisplay = searchRow.querySelector('.count-text');
+          const tagPills = pillsRow.querySelectorAll('.tag-pill');
+
+          const updateFilter = () => {
+            let visibleCount = 0;
+            const cleanQuery = searchQuery.trim().toLowerCase().replace(/^#/, '');
+
+            cards.forEach(card => {
+              const cardTags = (card.getAttribute('data-tags') || '').split(' ').filter(Boolean);
+              const cardSearchText = card.getAttribute('data-search-text') || '';
+
+              // Tag matching
+              const matchesTag = (selectedTag === 'all') || cardTags.includes(selectedTag);
+
+              // Query matching (matches tag or title/subtitle keywords)
+              let matchesQuery = true;
+              if (cleanQuery) {
+                matchesQuery = cardSearchText.includes(cleanQuery) || cardTags.some(t => t.includes(cleanQuery));
+              }
+
+              if (matchesTag && matchesQuery) {
+                card.style.display = '';
+                visibleCount++;
+              } else {
+                card.style.display = 'none';
+              }
+            });
+
+            // Update counters & UI
+            countDisplay.textContent = `${visibleCount} of ${totalArticles} article${visibleCount !== 1 ? 's' : ''}`;
+
+            if (searchQuery.trim()) {
+              searchClear.style.display = 'flex';
+            } else {
+              searchClear.style.display = 'none';
+            }
+
+            // Update pill active classes
+            tagPills.forEach(pill => {
+              if (pill.getAttribute('data-tag') === selectedTag) {
+                pill.classList.add('is-active');
+              } else {
+                pill.classList.remove('is-active');
+              }
+            });
+
+            // Show/hide empty state
+            if (visibleCount === 0) {
+              emptyState.style.display = 'block';
+              list.style.display = 'none';
+              const msgEl = emptyState.querySelector('.tag-no-results-msg');
+              if (selectedTag !== 'all') {
+                msgEl.textContent = `No articles found with tag "${selectedTag}".`;
+              } else if (cleanQuery) {
+                msgEl.textContent = `No articles found matching "${searchQuery}".`;
+              } else {
+                msgEl.textContent = 'No articles match the current filter.';
+              }
+            } else {
+              emptyState.style.display = 'none';
+              list.style.display = '';
+            }
+          };
+
+          // Tag pill click handlers
+          tagPills.forEach(pill => {
+            pill.addEventListener('click', () => {
+              const tag = pill.getAttribute('data-tag');
+              if (selectedTag === tag && tag !== 'all') {
+                selectedTag = 'all';
+              } else {
+                selectedTag = tag;
+              }
+              updateFilter();
+              // Update URL query string
+              const url = new URL(window.location);
+              if (selectedTag !== 'all') {
+                url.searchParams.set('tag', selectedTag);
+              } else {
+                url.searchParams.delete('tag');
+              }
+              history.replaceState(null, null, url);
+            });
+          });
+
+          // Search input handler
+          searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            updateFilter();
+          });
+
+          // Clear search button
+          searchClear.addEventListener('click', () => {
+            searchInput.value = '';
+            searchQuery = '';
+            updateFilter();
+            searchInput.focus();
+          });
+
+          // Reset filter button
+          emptyState.querySelector('.tag-reset-btn').addEventListener('click', () => {
+            selectedTag = 'all';
+            searchQuery = '';
+            searchInput.value = '';
+            updateFilter();
+            const url = new URL(window.location);
+            url.searchParams.delete('tag');
+            history.replaceState(null, null, url);
+          });
+
+          // Card tag badge click handler (delegate on list)
+          list.addEventListener('click', (e) => {
+            const badge = e.target.closest('.tag-badge-clickable');
+            if (!badge) return;
+            e.preventDefault();
+            e.stopPropagation();
+            const clickedTag = badge.textContent.replace(/^#/, '').trim().toLowerCase();
+            if (clickedTag) {
+              selectedTag = clickedTag;
+              updateFilter();
+              const url = new URL(window.location);
+              url.searchParams.set('tag', selectedTag);
+              history.replaceState(null, null, url);
+              researchContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+          });
+
+          // Read URL tag param on initial load
+          const urlParams = new URLSearchParams(window.location.search);
+          const initialTag = urlParams.get('tag');
+          if (initialTag && tagCounts.has(initialTag.toLowerCase())) {
+            selectedTag = initialTag.toLowerCase();
+            updateFilter();
+          }
+        });
+      };
+      initArticleTagResearch();
+    });
+  </script>
+</body>
+
+</html>

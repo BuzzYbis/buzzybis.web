@@ -1,0 +1,112 @@
+# Soupault Static Site Generator Configuration
+# Reference: https://soupault.net/reference-manual/
+
+[settings]
+  soupault_version = "5.3.0"
+  verbose = true
+  debug = false
+  site_dir = "site"
+  build_dir = "build"
+  page_file_extensions = ["html", "htm"]
+  clean_urls = true
+  generator_mode = true
+  default_template_file = "templates/main.html"
+  default_content_selector = "main#content"
+  default_content_action = "append_child"
+  keep_doctype = true
+  doctype = "<!DOCTYPE html>"
+  pretty_print_html = true
+  caching = true
+  cache_dir = ".soupault-cache"
+  page_character_encoding = "utf-8"
+
+# Site metadata extraction for index views
+[index]
+  sort_by = "date"
+  sort_descending = true
+  sort_type = "calendar"
+  date_formats = ["%F"]
+  strip_tags = false
+
+[index.fields.title]
+  selector = ["h1#post-title", "h1.post-title", "h1", "title"]
+
+[index.fields.subtitle]
+  selector = ["p#post-subtitle", "p.post-subtitle", ".blogpost-subtitle-raw"]
+
+[index.fields.date]
+  selector = ["time#post-date", "time.post-date", "time"]
+
+[index.fields.excerpt]
+  selector = ["p#post-excerpt", "p.post-excerpt", "p.lead", "p"]
+
+[index.fields.authors]
+  selector = [".author-byline .post-author-name", ".author-byline strong", ".author-byline a", ".author-byline", "span.author"]
+
+[index.fields.tags]
+  selector = [".post-tags-meta", ".post-tags"]
+
+# Index View: Project blog posts preview on project/<repo>/index.html
+[index.views.project_posts]
+  index_selector = "#project-posts"
+  index_template = """
+    {% if entries %}
+      <div class="post-preview-list">
+        {% for e in entries %}
+          {% if e.url != url and e.title != "Projects" %}
+            <article class="post-preview-card">
+              <h3 class="post-preview-title"><a href="{{e.url}}">{{e.title}}</a></h3>
+              {% if e.subtitle %}<p class="post-preview-subtitle">{{e.subtitle}}</p>{% endif %}
+              <div class="post-preview-meta">
+                {% if e.date %}<time datetime="{{e.date}}">{{e.date}}</time>{% endif %}
+                {% if e.authors %}<span>&middot; By {{e.authors}}</span>{% endif %}
+              </div>
+              {% if e.excerpt %}<p class="post-preview-excerpt">{{e.excerpt}}</p>{% endif %}
+              {% if e.tags %}<div class="post-preview-tags">{{e.tags}}</div>{% endif %}
+              <a href="{{e.url}}" class="post-read-link">Read post &rarr;</a>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted">No blog posts found for this project yet.</p>
+    {% endif %}
+  """
+
+# Index View: Recent blog posts on Home page index.html
+# Note: The index_template structure intentionally mirrors project_posts above for
+# uniform visual styling, differing by scoping to section = "project" with include_subsections.
+[index.views.home_recent_posts]
+  index_selector = "#home-recent-posts"
+  section = "project"
+  include_subsections = true
+  index_template = """
+    {% if entries %}
+      <div class="post-preview-list">
+        {% for e in entries %}
+          {% if e.url != url and e.title != "Projects" %}
+            <article class="post-preview-card">
+              <h3 class="post-preview-title"><a href="{{e.url}}">{{e.title}}</a></h3>
+              {% if e.subtitle %}<p class="post-preview-subtitle">{{e.subtitle}}</p>{% endif %}
+              <div class="post-preview-meta">
+                {% if e.date %}<time datetime="{{e.date}}">{{e.date}}</time>{% endif %}
+                {% if e.authors %}<span>&middot; By {{e.authors}}</span>{% endif %}
+              </div>
+              {% if e.excerpt %}<p class="post-preview-excerpt">{{e.excerpt}}</p>{% endif %}
+              {% if e.tags %}<div class="post-preview-tags">{{e.tags}}</div>{% endif %}
+              <a href="{{e.url}}" class="post-read-link">Read post &rarr;</a>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted">No posts available yet.</p>
+    {% endif %}
+  """
+
+# Page Title Widget
+[widgets.page-title]
+  widget = "title"
+  selector = ["h1#post-title", "h1#project-title", "h1#page-title", "h1"]
+  default = "BuzzYbis"
+  append = " &mdash; BuzzYbis"
