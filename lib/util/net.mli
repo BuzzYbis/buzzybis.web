@@ -1,10 +1,9 @@
-(** Network and external process utilities. *)
+(** HTTP helpers on top of curl. Only [https] URLs are allowed, redirects included. *)
 
-(** [run_cmd cmd] executes [cmd] synchronously in a subshell. *)
-val run_cmd : string -> (Unix.process_status * string, Error.t) result
-
-(** [http_get url] performs an HTTP GET request using curl. *)
+(** [http_get url] fetches [url] and returns the response body. HTTP error statuses are
+    not failures here: callers inspect the body (GitHub returns JSON error objects). *)
 val http_get : string -> (string, Error.t) result
 
-(** [download_file ~url ~dest] streams the file from [url] to [dest]. *)
+(** [download_file ~url ~dest] downloads [url] into [dest] atomically. Any HTTP error
+    status is a failure and leaves no partial file behind. *)
 val download_file : url:string -> dest:string -> (unit, Error.t) result

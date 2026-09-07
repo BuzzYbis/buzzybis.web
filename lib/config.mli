@@ -1,5 +1,4 @@
-(** Configuration types and TOML parser for [projects.toml]. Parsing and file state
-    operations return typed [('a, Error.t) result] values. *)
+(** Configuration types and a minimal TOML reader for [projects.toml]. *)
 
 type download_item =
   { label : string
@@ -7,56 +6,63 @@ type download_item =
   }
 
 type project =
-  { name : string
-  ; mutable title : string
-  ; mutable description : string
-  ; mutable collaborators : string list
-  ; mutable repo_url : string
-  ; mutable tags : string list
-  ; mutable downloads : download_item list
+  { name : string (** Section name; also the directory and URL segment. *)
+  ; title : string
+  ; description : string
+  ; collaborators : string list
+  ; repo_url : string
+  ; tags : string list
+  ; downloads : download_item list
   }
 
-(** The application configuration type. *)
 type t =
-  { mutable projects_dir : string
-  ; mutable poll_interval : int
-  ; mutable projects : project list
+  { projects_dir : string
+  ; poll_interval : int
+  ; projects : project list
   }
 
-type app_config = t
+(** On-disk layout of one project under {!projects_dir}. *)
+type project_paths =
+  { project_dir : string
+  ; html_dir : string
+  ; pdfs_dir : string
+  ; cached_pdf_dir : string
+  }
 
-(** [github_user] is the default GitHub organization/user to track. *)
+(** Default GitHub owner used when a project omits [repo]. *)
 val github_user : string
 
-(** [config_file] is the default filename of the configuration file. *)
+(** Default configuration file name. *)
 val config_file : string
 
-(** [parse_string_list str] parses a TOML inline array of strings, e.g.
-    ["[\"a\", \"b\"]"]. *)
-val parse_string_list : string -> string list
+(** Default value of [projects_dir]. *)
+val default_projects_dir : string
 
-(** [parse_string_val raw] strips surrounding quotes and whitespace from [raw]. *)
-val parse_string_val : string -> string
+(** Scratch directory where fetched Typst sources are staged, relative to the repository
+    root. *)
+val fetch_tmp_dir : string
 
-(** [expand_path path] expands leading [~/] or relative paths to absolute filesystem
-    paths. *)
-val expand_path : string -> string
+(** A configuration with no projects and default settings. *)
+val empty : t
 
-(** [get_projects_dir t] returns the resolved output directory for projects. *)
-val get_projects_dir : t -> string
+(** [load path] reads and parses the configuration file at [path]. Project section names
+    must satisfy {!Util.Fs.is_safe_name}. *)
+val load : string -> (t, Error.t) result
 
-(** [get_projects_dir_standalone ()] reads the project directory path from the
-    configuration file without loading all project metadata. *)
-val get_projects_dir_standalone : unit -> string
+(** [projects_dir t] is the absolute, [~]-expanded output directory for projects. *)
+val projects_dir : t -> string
 
-(** [load_projects_toml path] loads and parses the TOML configuration file at [path]. *)
-val load_projects_toml : string -> (t, Error.t) result
+(** [project_paths t project] is the on-disk layout of [project]. *)
+val project_paths : t -> project -> project_paths
 
-(** [get_state_file t] returns the path to the fetch state JSON file for [t]. *)
-val get_state_file : t -> string
+(** [project_url_path project] is the site path of [project], without trailing slash. *)
+val project_url_path : project -> string
 
-(** [load_fetch_state t] reads the map of project names to commit SHAs. *)
+(** [find_project t name] looks a project up by its section name. *)
+val find_project : t -> string -> project option
+
+(** [load_fetch_state t] reads the map of project names to last synced commit SHAs. *)
 val load_fetch_state : t -> (string * string) list
 
-(** [save_fetch_state t state] persists the project commit SHAs atomically to disk. *)
+(** [save_fetch_state t state] persists the commit SHA map atomically. *)
 val save_fetch_state : t -> (string * string) list -> (unit, Error.t) result

@@ -91,48 +91,26 @@
         updateFloatingNav();
       }
 
-      // External links open in a new tab/page
-      // Dual strategy:
-      // 1. Initial DOM pass ensures existing links have target/rel attributes for accessibility & static state.
-      // 2. Delegated capture listener ensures dynamically created or modified links also open externally.
-      const makeExternalLinksOpenNewTab = () => {
-        document.querySelectorAll('a').forEach(a => {
-          const href = a.getAttribute('href');
-          if (!href) return;
-          if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//')) {
-            try {
-              const url = new URL(href, window.location.href);
-              if (url.origin !== window.location.origin) {
-                a.setAttribute('target', '_blank');
-                a.setAttribute('rel', 'noopener noreferrer');
-              }
-            } catch (e) {
-              a.setAttribute('target', '_blank');
-              a.setAttribute('rel', 'noopener noreferrer');
-            }
-          }
-        });
+      // External links open in a new tab. Applied once to the initial DOM and again on
+      // click (capture phase) so links added or changed later behave the same way.
+      const openExternally = (a) => {
+        const href = a.getAttribute('href');
+        if (!href || !/^(https?:)?\/\//.test(href)) return;
+        let external = true;
+        try {
+          external = new URL(href, window.location.href).origin !== window.location.origin;
+        } catch (e) {
+          // Unparseable URL: treat as external.
+        }
+        if (external) {
+          a.setAttribute('target', '_blank');
+          a.setAttribute('rel', 'noopener noreferrer');
+        }
       };
-      makeExternalLinksOpenNewTab();
-
-      // Catch any dynamically clicked links or delegated clicks
+      document.querySelectorAll('a').forEach(openExternally);
       document.addEventListener('click', (e) => {
         const a = e.target.closest('a');
-        if (!a) return;
-        const href = a.getAttribute('href');
-        if (!href) return;
-        if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//')) {
-          try {
-            const url = new URL(href, window.location.href);
-            if (url.origin !== window.location.origin) {
-              a.setAttribute('target', '_blank');
-              a.setAttribute('rel', 'noopener noreferrer');
-            }
-          } catch (err) {
-            a.setAttribute('target', '_blank');
-            a.setAttribute('rel', 'noopener noreferrer');
-          }
-        }
+        if (a) openExternally(a);
       }, true);
 
       // Back to Top floating button handler
@@ -485,28 +463,32 @@
             </div>
           `;
 
-          // Pills row
+          // Pills row. Tag names come from page text, so they are inserted as text nodes,
+          // never as HTML.
+          const makePill = (tag, label, count, active) => {
+            const pill = document.createElement('button');
+            pill.type = 'button';
+            pill.className = active ? 'tag-pill is-active' : 'tag-pill';
+            pill.setAttribute('data-tag', tag);
+            const name = document.createElement('span');
+            name.textContent = label;
+            const counter = document.createElement('span');
+            counter.className = 'tag-pill-count';
+            counter.textContent = String(count);
+            pill.append(name, counter);
+            return pill;
+          };
+
           const pillsRow = document.createElement('div');
           pillsRow.className = 'tag-pills-row';
           pillsRow.innerHTML = `
             <span class="tag-pills-label">Tags:</span>
-            <div class="tag-pills-scroll">
-              <button type="button" class="tag-pill is-active" data-tag="all">
-                <span>All</span>
-                <span class="tag-pill-count">${totalArticles}</span>
-              </button>
-            </div>
+            <div class="tag-pills-scroll"></div>
           `;
-
           const pillsScroll = pillsRow.querySelector('.tag-pills-scroll');
+          pillsScroll.appendChild(makePill('all', 'All', totalArticles, true));
           sortedTags.forEach(tag => {
-            const count = tagCounts.get(tag);
-            const pill = document.createElement('button');
-            pill.type = 'button';
-            pill.className = 'tag-pill';
-            pill.setAttribute('data-tag', tag);
-            pill.innerHTML = `<span>${tag}</span><span class="tag-pill-count">${count}</span>`;
-            pillsScroll.appendChild(pill);
+            pillsScroll.appendChild(makePill(tag, tag, tagCounts.get(tag), false));
           });
 
           // Empty state container

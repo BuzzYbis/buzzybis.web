@@ -2,5 +2,5 @@
 
 (library
  (name buzzybis_web)
- (libraries unix threads yojson str uri lambdasoup async_log)
- (flags :standard -w +A-4-44-48))
+ (public_name buzzybis_web)
+ (libraries unix threads.posix yojson uri lambdasoup async_log))

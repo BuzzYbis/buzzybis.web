@@ -1,5 +1,5 @@
-(** Content constants for BuzzYbis website. Centralizes bio texts, headers, and
-    descriptions. *)
+(** Site copy. Plain-text values are escaped by the generators; [bio_lead], [bio_text] and
+    [projects_lead] are trusted HTML fragments inserted verbatim. *)
 
 val bio_title : string
 val bio_subtitle : string

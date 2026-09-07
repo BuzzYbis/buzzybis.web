@@ -1,16 +1,13 @@
-(* Production logging module using Jane Street's async_log *)
+(* Logging backed by Async_log's blocking interface, writing to stderr. *)
 
-type t =
+type level =
   | Info
   | Warn
   | Error
   | Debug
 
-type level = t
-
 let to_async_level = function
-  | Info -> `Info
-  | Warn -> `Info
+  | Info | Warn -> `Info
   | Error -> `Error
   | Debug -> `Debug
 ;;
@@ -21,10 +18,15 @@ let init ?(level = Info) () =
 ;;
 
 let info fmt = Async_log.Blocking.info fmt
-let warn fmt = Async_log.Blocking.info fmt
+let warn fmt = Async_log.Blocking.info ("[WARN] " ^^ fmt)
 let error fmt = Async_log.Blocking.error fmt
 let debug fmt = Async_log.Blocking.debug fmt
 
 let log_error ~context err =
   Async_log.Blocking.error "[%s] %s" context (Error.to_string err)
+;;
+
+let report ~context = function
+  | Ok () -> ()
+  | Error err -> log_error ~context err
 ;;

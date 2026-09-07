@@ -1,54 +1,64 @@
-# BuzzYbis Static Site Build & Management
-.PHONY: all build fetch fetch-force watch serve clean
+# BuzzYbis static site: build, fetch, serve.
+
+DUNE         := dune
+DUNE_ROOT    := --root .
+FETCH        := $(DUNE) exec $(DUNE_ROOT) -- bin/fetch.exe
+SERVE        := $(DUNE) exec $(DUNE_ROOT) -- bin/serve.exe
+PORT         ?= 8000
+BUILD_DIR    := build
+SITE_TMP     := _site_tmp
+# External projects directory, read from projects.toml (override: make PROJECTS_DIR=...).
+PROJECTS_DIR ?= $(or $(shell sed -n 's/^projects_dir *= *"\(.*\)".*/\1/p' projects.toml),../buzzybis_projects)
+
+.PHONY: all build fetch fetch-force watch serve test fmt format clean
 
 all: build
 
-# Build OCaml binaries with Dune and generate static site with Soupault.
-# Uses an isolated staging directory (_site_tmp) to assemble site/ files, the
-# project directory index, and external project assets without polluting the repository.
+# Regenerate the OCaml-produced pages, assemble a staging copy of site/ plus the external
+# project HTML/PDF assets, and run Soupault on it.
 build:
-	dune build --root .
-	dune exec --root . -- bin/fetch.exe --pages-only
-	@rm -rf _site_tmp && mkdir -p _site_tmp
-	@cp -R site/* _site_tmp/
-	@rm -rf _site_tmp/project
-	@mkdir -p _site_tmp/project
-	@if [ -f _site_tmp/project.html ]; then mv _site_tmp/project.html _site_tmp/project/index.html; fi
-	@if [ -f ../buzzybis_projects/resume.pdf ]; then cp ../buzzybis_projects/resume.pdf _site_tmp/resume.pdf; fi
-	@rm -f ../buzzybis_projects/*/*.html 2>/dev/null || true
-	@for proj_dir in ../buzzybis_projects/*; do \
-		if [ -d "$$proj_dir" ]; then \
-			proj=$$(basename "$$proj_dir"); \
-			mkdir -p _site_tmp/project/$$proj; \
-			if [ -d "$$proj_dir/html" ]; then cp -R "$$proj_dir/html" _site_tmp/project/$$proj/; fi; \
-			if [ -d "$$proj_dir/pdfs" ]; then cp -R "$$proj_dir/pdfs" _site_tmp/project/$$proj/; fi; \
-			rm -rf _site_tmp/project/$$proj/html/cached_pdf 2>/dev/null || true; \
-		fi; \
+	$(FETCH) --pages-only
+	rm -rf $(SITE_TMP)
+	mkdir -p $(SITE_TMP)
+	cp -R site/. $(SITE_TMP)/
+	rm -rf $(SITE_TMP)/project
+	mkdir -p $(SITE_TMP)/project
+	[ ! -f $(SITE_TMP)/project.html ] || mv $(SITE_TMP)/project.html $(SITE_TMP)/project/index.html
+	[ ! -f $(PROJECTS_DIR)/resume.pdf ] || cp $(PROJECTS_DIR)/resume.pdf $(SITE_TMP)/resume.pdf
+	@for proj_dir in $(PROJECTS_DIR)/*/; do \
+		[ -d "$$proj_dir" ] || continue; \
+		proj=$$(basename "$$proj_dir"); \
+		mkdir -p "$(SITE_TMP)/project/$$proj"; \
+		for sub in html pdfs; do \
+			[ ! -d "$$proj_dir/$$sub" ] || cp -R "$$proj_dir/$$sub" "$(SITE_TMP)/project/$$proj/"; \
+		done; \
+		rm -rf "$(SITE_TMP)/project/$$proj/html/cached_pdf"; \
 	done
-	@soupault --site-dir _site_tmp --build-dir build
-	@rm -rf _site_tmp
+	soupault --site-dir $(SITE_TMP) --build-dir $(BUILD_DIR)
+	rm -rf $(SITE_TMP)
 
-# Fetch blogposts from public GitHub repositories using OCaml (only rebuilds if remote changed)
+# Fetch blog posts from GitHub; only recompiles projects whose remote changed.
 fetch:
-	dune exec --root . -- bin/fetch.exe
+	$(FETCH)
 
-# Force refetch and recompile even if commit SHAs match
+# Refetch and recompile everything even if commit SHAs match.
 fetch-force:
-	dune exec --root . -- bin/fetch.exe -- --force
+	$(FETCH) --force
 
-# Run background polling daemon to check for updates periodically and auto-rebuild
+# Poll GitHub periodically and rebuild the site on changes.
 watch:
-	dune exec --root . -- bin/fetch.exe -- --watch
+	$(FETCH) --watch
 
-# Serve the static website locally with pure OCaml HTTP server
+# Build, then serve $(BUILD_DIR) locally with the OCaml HTTP server.
 serve: build
-	dune exec --root . -- bin/serve.exe 8000
+	$(SERVE) $(PORT)
 
-# Clean generated artifacts, caches, and external project symlink
-clean:
-	rm -rf build .soupault-cache site/project _site_tmp
-	dune clean --root .
+test:
+	$(DUNE) test $(DUNE_ROOT)
 
-# Format OCaml source code with ocamlformat
 fmt format:
-	dune fmt
+	$(DUNE) fmt $(DUNE_ROOT)
+
+clean:
+	rm -rf $(BUILD_DIR) .soupault-cache $(SITE_TMP)
+	$(DUNE) clean $(DUNE_ROOT)

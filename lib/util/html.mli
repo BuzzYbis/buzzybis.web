@@ -1,28 +1,22 @@
-(** HTML parsing, sanitization, and text extraction utilities. *)
+(** HTML escaping, parsing and text extraction. *)
 
-(** [escape_html text] escapes special HTML characters. *)
+(** [escape_html s] escapes the ampersand, angle brackets and both quote characters so
+    that [s] can be embedded in HTML text or attribute values. *)
 val escape_html : string -> string
 
-(** [has_substring ~sub s] checks if substring [sub] is contained in [s]. *)
-val has_substring : sub:string -> string -> bool
+(** [set_external_link_targets soup] adds [target="_blank"] and
+    [rel="noopener noreferrer"] to every [http(s)] anchor in [soup], in place. *)
+val set_external_link_targets : Soup.soup Soup.node -> unit
 
-(** Alias for [has_substring]. *)
-val string_contains : sub:string -> string -> bool
+(** [text_content node] concatenates and trims the text nodes under [node]. *)
+val text_content : 'a Soup.node -> string
 
-(** [add_external_link_targets html] adds target and rel attributes to external links. *)
-val add_external_link_targets : string -> string
-
-(** [clean_html_text html] extracts plain text from an HTML fragment. *)
-val clean_html_text : string -> string
-
-(** [clean_subtitle html] cleans raw subtitle text from an article. *)
-val clean_subtitle : string -> string
-
-(** [clean_authors html] cleans raw author metadata from an article. *)
+(** [clean_authors html] renders an author list as escaped HTML, preserving links. A
+    leading [By] prefix is dropped. *)
 val clean_authors : string -> string
 
-(** [clean_tag_name tag] strips leading '#' and trims whitespace from [tag]. *)
+(** [clean_tag_name tag] strips a leading ['#'] and surrounding whitespace. *)
 val clean_tag_name : string -> string
 
-(** [extract_date_from_text text] scans [text] for a YYYY-MM-DD date pattern. *)
+(** [extract_date_from_text text] finds the first [YYYY-MM-DD] substring of [text]. *)
 val extract_date_from_text : string -> string option

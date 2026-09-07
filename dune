@@ -1,0 +1,8 @@
+; Strict warnings for every stanza in the project (dev profile only).
+; Disabled: 4 (fragile match), 40-42 (type-directed disambiguation),
+; 44-45 (open shadowing), 48 (eliminated optional args), 70 (missing mli).
+
+(env
+ (dev
+  (flags
+   (:standard -w +A-4-40-41-42-44-45-48-70))))

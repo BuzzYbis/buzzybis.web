@@ -22,7 +22,6 @@
   --border: #C8C8C2;
   --border-subtle: #D2D2CC;
   --accent: #1A1A1A;
-  --accent-light: #D4D4CE;
 
   /* Interactive Elements */
   --link: #1A1A1A;
@@ -39,35 +38,6 @@
   --shadow-sm: none;
   --shadow-md: none;
   --max-w: 780px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Inverted / Dark E-Ink Palette (Neutral matte slate, zero harsh glare) */
-    --bg: #1A1A1A;
-    --bg-surface: #222222;
-    --bg-subtle: #292929;
-    --text: #EAEAE5;
-    --text-muted: #A0A09A;
-    --text-dim: #767670;
-
-    --border: #383836;
-    --border-subtle: #2C2C2A;
-    --accent: #EAEAE5;
-    --accent-light: #30302E;
-
-    --link: #EAEAE5;
-    --link-hover: #FFFFFF;
-    --link-border: #767670;
-
-    --code-bg: #202020;
-    --code-border: #383836;
-    --tag-bg: #292929;
-    --tag-text: #EAEAE5;
-
-    --shadow-sm: none;
-    --shadow-md: none;
-  }
 }
 
 /* ==========================================================================
@@ -93,9 +63,6 @@ body {
   color: var(--text);
   font-family: var(--font-serif);
   font-size: 1.0625rem;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
   transition: background-color 0.2s ease, color 0.2s ease;
   text-rendering: optimizeLegibility;
 }
@@ -309,19 +276,6 @@ blockquote {
   cursor: pointer;
 }
 
-.btn-primary {
-  background-color: var(--text);
-  color: var(--bg);
-  border: 1px solid var(--text);
-}
-
-.btn-primary:hover {
-  background-color: var(--link-hover);
-  color: var(--bg);
-  border-color: var(--link-hover);
-  text-decoration: none;
-}
-
 .btn-outline {
   background-color: transparent;
   color: var(--text);
@@ -349,10 +303,6 @@ blockquote {
 /* ==========================================================================
    Bio & Profile Section
    ========================================================================== */
-
-.bio-section {
-  padding: 0;
-}
 
 .bio-header {
   margin-bottom: 1.35rem;
@@ -411,14 +361,12 @@ blockquote {
   transform: translateY(-1px);
 }
 
-.btn-bio-icon,
 .btn-bio svg {
   color: var(--text-dim);
   transition: color 0.15s ease;
   flex-shrink: 0;
 }
 
-.btn-bio:hover .btn-bio-icon,
 .btn-bio:hover svg {
   color: var(--text);
 }
@@ -863,7 +811,6 @@ blockquote {
 }
 
 .project-meta-item .badge {
-  display: inline-block;
   margin-top: 0.2rem;
   margin-right: 0.25rem;
 }
@@ -873,47 +820,6 @@ blockquote {
   flex-direction: column;
   gap: 0.45rem;
   align-items: flex-start;
-}
-
-.btn-project-repo {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-family: var(--font-sans);
-  font-size: 0.88rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  background: transparent;
-  border: none;
-  padding: 0.2rem 0;
-  text-decoration: none;
-  transition: color 0.15s ease, filter 0.15s ease, transform 0.15s ease;
-  line-height: 1.25;
-  cursor: pointer;
-}
-
-.btn-project-repo:hover {
-  color: var(--text);
-  text-decoration: none;
-  transform: translateY(-1px);
-}
-
-.btn-project-repo .btn-repo-left {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-}
-
-.btn-project-repo .icon-github,
-.btn-project-repo-icon {
-  color: var(--text-dim);
-  transition: color 0.15s ease;
-  flex-shrink: 0;
-}
-
-.btn-project-repo:hover .icon-github,
-.btn-project-repo:hover .btn-project-repo-icon {
-  color: var(--text);
 }
 
 article.blogpost {
@@ -993,51 +899,14 @@ article.blogpost {
   color: var(--text-muted);
 }
 
-.btn-download-pdf {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-family: var(--font-sans);
-  font-size: 0.88rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  background: transparent;
-  border: none;
-  padding: 0.2rem 0;
-  text-decoration: none;
-  transition: color 0.15s ease, filter 0.15s ease, transform 0.15s ease;
-  line-height: 1.25;
-  cursor: pointer;
-}
-
-.btn-download-pdf:hover {
-  color: var(--text);
-  background: transparent;
-  border: none;
-  text-decoration: none;
-  transform: translateY(-1px);
-}
-
-.btn-download-pdf svg {
-  color: var(--text-dim);
-  transition: color 0.15s ease;
-  flex-shrink: 0;
-}
-
-.btn-download-pdf:hover svg {
-  color: var(--text);
-}
-
 /* ==========================================================================
    Blogpost Header & Article Layout
    ========================================================================== */
 
-/* Hide tags from top of blogpost page */
+/* Tags are indexed from the article header but only shown on preview cards */
 .blogpost .post-tags,
-.blogpost .post-tags-meta,
-.post-header .post-tags,
-.post-header .post-tags-meta {
-  display: none !important;
+.blogpost .post-tags-meta {
+  display: none;
 }
 
 /* ==========================================================================
@@ -1053,7 +922,7 @@ article.blogpost {
 
 .post-preview-tags,
 .post-preview-card .post-tags-meta {
-  display: flex !important;
+  display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
   margin: 0.65rem 0 0.5rem;
@@ -1103,16 +972,108 @@ nav[role="doc-toc"] a:hover {
    Floating Navigation, Table of Contents & Back to Top (Right Side)
    ========================================================================== */
 
-.floating-nav-sidebar {
+/* Shared behaviour of the three fixed cards. --float-x is 0 by default and 50% on wide
+   screens, where the cards are centred in the gutter right of the article. */
+.floating-nav-sidebar,
+.floating-toc-sidebar,
+.back-to-top-btn {
+  --float-x: 0px;
   position: fixed;
-  top: 2rem;
-  z-index: 96;
+  right: 1.25rem;
+  width: min(250px, calc(100vw - 2.5rem));
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
   transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
     transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
     visibility 0.25s ease;
+}
+
+.floating-nav-sidebar {
+  top: 2rem;
+  z-index: 96;
+  transform: translate(var(--float-x), -8px);
+}
+
+.floating-toc-sidebar {
+  top: 5.1rem;
+  z-index: 90;
+  max-height: calc(100vh - 9.5rem);
+  transform: translate(var(--float-x), 10px);
+}
+
+.back-to-top-btn {
+  bottom: 2rem;
+  z-index: 95;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  transform: translate(var(--float-x), 12px);
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    visibility 0.25s ease;
+}
+
+.floating-nav-sidebar.is-visible,
+.floating-toc-sidebar.is-visible,
+.back-to-top-btn.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(var(--float-x), 0);
+}
+
+.back-to-top-btn svg {
+  flex-shrink: 0;
+  color: var(--text-dim);
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.back-to-top-btn:hover {
+  background-color: var(--bg-subtle);
+  color: var(--text);
+  border-color: var(--border);
+  box-shadow: var(--shadow-sm);
+  transform: translate(var(--float-x), -2px);
+}
+
+.back-to-top-btn:active {
+  transform: translate(var(--float-x), 0);
+}
+
+.back-to-top-btn:hover svg {
+  transform: translateY(-2px);
+  color: var(--accent);
+}
+
+/* Wide screens: centre the cards between the article's right edge and the viewport
+   edge. The midpoint sits at (100vw - --max-w) / 4 from the right; translating by 50%
+   of the card width puts the card's centre on it. */
+@media (min-width: 1300px) {
+  .floating-nav-sidebar,
+  .floating-toc-sidebar,
+  .back-to-top-btn {
+    --float-x: 50%;
+    right: calc((100vw - var(--max-w)) / 4);
+    width: 250px;
+  }
 }
 
 .floating-nav-card {
@@ -1131,7 +1092,6 @@ nav[role="doc-toc"] a:hover {
 
 .floating-nav-card:hover {
   border-color: var(--text-dim);
-  box-shadow: var(--shadow-md);
 }
 
 .floating-nav-brand {
@@ -1192,205 +1152,6 @@ nav[role="doc-toc"] a:hover {
   right: 0;
   height: 1.5px;
   background-color: var(--text);
-}
-
-.floating-toc-sidebar {
-  position: fixed;
-  top: 5.1rem;
-  z-index: 90;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    visibility 0.25s ease;
-}
-
-/* Back to Top Button sharing the exact same card style as the TOC */
-.back-to-top-btn {
-  position: fixed;
-  bottom: 2rem;
-  z-index: 95;
-  opacity: 0;
-  visibility: hidden;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.65rem 0.85rem;
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: var(--shadow-md);
-  font-family: var(--font-sans);
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    color 0.15s ease,
-    box-shadow 0.15s ease,
-    visibility 0.25s ease;
-}
-
-.back-to-top-btn svg {
-  flex-shrink: 0;
-  color: var(--text-dim);
-  transition: transform 0.15s ease, color 0.15s ease;
-}
-
-.back-to-top-btn:hover {
-  background-color: var(--bg-subtle);
-  color: var(--text);
-  border-color: var(--border);
-  box-shadow: var(--shadow-sm);
-}
-
-.back-to-top-btn:hover svg {
-  transform: translateY(-2px);
-  color: var(--accent);
-}
-
-/* Wide screens (>= 1300px):
-   Both the TOC box and the Back to Top button are centered in the middle
-   between the end of the text (article right edge) and the right screen border!
-   Math:
-   - Article width: var(--max-w) = 780px
-   - Midpoint of space from right border: (100vw - var(--max-w)) / 4
-   - right: calc((100vw - var(--max-w)) / 4) with transform: translate(50%, ...)
-     aligns the center of the 250px box precisely on this midpoint!
-*/
-@media (min-width: 1300px) {
-
-  .floating-nav-sidebar,
-  .floating-toc-sidebar,
-  .back-to-top-btn {
-    right: calc((100vw - var(--max-w)) / 4);
-    width: 250px;
-  }
-
-  .floating-nav-sidebar {
-    transform: translate(50%, -8px);
-  }
-
-  .floating-nav-sidebar.is-visible {
-    opacity: 1;
-    visibility: visible;
-    transform: translate(50%, 0);
-    pointer-events: auto;
-  }
-
-  .floating-toc-sidebar {
-    max-height: calc(100vh - 9.5rem);
-    transform: translate(50%, 10px);
-  }
-
-  .floating-toc-sidebar.is-visible {
-    opacity: 1;
-    visibility: visible;
-    transform: translate(50%, 0);
-    pointer-events: auto;
-  }
-
-  .back-to-top-btn {
-    transform: translate(50%, 12px);
-  }
-
-  .back-to-top-btn.is-visible {
-    opacity: 1;
-    visibility: visible;
-    transform: translate(50%, 0);
-  }
-
-  .back-to-top-btn:hover {
-    transform: translate(50%, -2px);
-  }
-
-  .back-to-top-btn:active {
-    transform: translate(50%, 0);
-  }
-}
-
-/* Screens < 1300px:
-   Both stay aligned along the right edge of the viewport with matching widths!
-*/
-@media (max-width: 1299px) {
-
-  .floating-nav-sidebar,
-  .floating-toc-sidebar,
-  .back-to-top-btn {
-    right: 1.25rem;
-    width: min(250px, calc(100vw - 2.5rem));
-  }
-
-  .floating-nav-sidebar {
-    transform: translateY(-8px);
-  }
-
-  .floating-nav-sidebar.is-visible {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
-
-  .floating-toc-sidebar {
-    max-height: calc(100vh - 9.5rem);
-    transform: translateY(10px);
-  }
-
-  .floating-toc-sidebar.is-visible {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
-
-  .back-to-top-btn {
-    transform: translateY(12px);
-  }
-
-  .back-to-top-btn.is-visible {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-
-  .back-to-top-btn:hover {
-    transform: translateY(-2px);
-  }
-
-  .back-to-top-btn:active {
-    transform: translateY(0);
-  }
-}
-
-@media (max-width: 640px) {
-  .floating-nav-sidebar {
-    top: 1rem;
-    right: 1rem;
-    width: auto;
-    max-width: calc(100vw - 2rem);
-  }
-
-  .floating-toc-sidebar {
-    top: 4.25rem;
-    right: 1rem;
-    width: auto;
-    max-width: calc(100vw - 2rem);
-  }
-
-  .back-to-top-btn {
-    bottom: 1.25rem;
-    right: 1rem;
-    width: auto;
-    min-width: 135px;
-  }
 }
 
 .floating-toc-card {
@@ -1550,7 +1311,6 @@ nav[role="doc-toc"] a:hover {
 .post-footer-notice p {
   margin: 0;
   line-height: 1.55;
-  text-align: center;
 }
 
 /* ==========================================================================
@@ -1630,5 +1390,26 @@ nav[role="doc-toc"] a:hover {
   .footer-content {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .floating-nav-sidebar {
+    top: 1rem;
+    right: 1rem;
+    width: auto;
+    max-width: calc(100vw - 2rem);
+  }
+
+  .floating-toc-sidebar {
+    top: 4.25rem;
+    right: 1rem;
+    width: auto;
+    max-width: calc(100vw - 2rem);
+  }
+
+  .back-to-top-btn {
+    bottom: 1.25rem;
+    right: 1rem;
+    width: auto;
+    min-width: 135px;
   }
 }

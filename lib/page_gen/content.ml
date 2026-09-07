@@ -1,4 +1,4 @@
-(* Content constants for BuzzYbis website *)
+(* Site copy. [bio_lead], [bio_text] and [projects_lead] are inserted as HTML. *)
 
 let bio_title = "Ugo Gosso"
 let bio_subtitle = "Software Engineer · Systems & Programming Languages Enthusiast"
