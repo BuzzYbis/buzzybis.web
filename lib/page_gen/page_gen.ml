@@ -466,7 +466,7 @@ let generate_home_page projects =
   </p>
 
   <div class="bio-actions">
-    <a href="/resume.pdf" class="btn-bio" id="btn-view-resume" target="_blank" rel="noopener noreferrer" title="Open the resume (PDF)">
+    <a href="/Ugo-Gosso_SWE.pdf" class="btn-bio" id="btn-view-resume" target="_blank" rel="noopener noreferrer" title="Open the resume (PDF)">
 %s
       <span>Resume (PDF)</span>
     </a>

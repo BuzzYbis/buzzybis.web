@@ -5,6 +5,6 @@ _fetch_tmp/
 _site_tmp/
 .soupault-cache/
 *.install
-.DS_Store
+**/.DS_Store
 
 .vscode

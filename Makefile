@@ -24,7 +24,7 @@ build:
 	rm -rf $(SITE_TMP)/project
 	mkdir -p $(SITE_TMP)/project
 	[ ! -f $(SITE_TMP)/project.html ] || mv $(SITE_TMP)/project.html $(SITE_TMP)/project/index.html
-	[ ! -f $(PROJECTS_DIR)/resume.pdf ] || cp $(PROJECTS_DIR)/resume.pdf $(SITE_TMP)/resume.pdf
+	[ ! -f $(PROJECTS_DIR)/Ugo-Gosso_SWE.pdf ] || cp $(PROJECTS_DIR)/Ugo-Gosso_SWE.pdf $(SITE_TMP)/Ugo-Gosso_SWE.pdf
 	@for proj_dir in $(PROJECTS_DIR)/*/; do \
 		[ -d "$$proj_dir" ] || continue; \
 		proj=$$(basename "$$proj_dir"); \
