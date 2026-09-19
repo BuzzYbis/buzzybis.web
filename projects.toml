@@ -10,7 +10,7 @@ poll_interval = 300
 
 [os-ads]
 title = "Omnium Scientia — Algorithm & Data Structure"
-description = "This is the algorithms and data structure course from the Omnium Scientia project that aim to build free learning material on computer science."
+description = "This book is the algorithms and data structures curriculum of the Omnium Scientia project, an initiative dedicated to creating free computer science learning materials. It builds a rigorous foundation from first principles, covering the essential algorithms, data structures, and problem-solving techniques needed to become a proficient software engineer. See more in the post about this curriculum."
 collaborators = ["BuzzYbis"]
 repo = "https://github.com/Omnium-Scientia/A-DS"
 tags = ["alg", "data structure", "learning", "theory"]

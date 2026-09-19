@@ -165,15 +165,14 @@ let format_blogpost_html
   let actions_block =
     Printf.sprintf
       "<div class=\"post-header-actions\">\n\
-      \        <a href=\"%s\" class=\"btn-bio btn-download-pdf\" target=\"_blank\" \
-       rel=\"noopener noreferrer\" download=\"%s.pdf\" title=\"Download article as PDF\">\n\
+      \        <a href=\"%s\" class=\"btn-bio btn-view-pdf\" target=\"_blank\" \
+       rel=\"noopener noreferrer\" title=\"Open the PDF version of this article\">\n\
        %s\n\
       \  <span>PDF</span>\n\
       \ </a>\n\
       \      </div>"
       (escape_html pdf_url)
-      (escape_html slug)
-      Svg.download_icon
+      Svg.view_icon
   in
   let meta_row =
     Printf.sprintf
@@ -295,13 +294,13 @@ let render_project_card ~collaborators_label (project : Config.project) =
 
 let render_download_button (d : Config.download_item) =
   Printf.sprintf
-    {|        <a href="%s" class="btn-bio" target="_blank" rel="noopener noreferrer" download title="Download %s">
+    {|        <a href="%s" class="btn-bio" target="_blank" rel="noopener noreferrer" title="Open %s">
 %s
           <span>%s</span>
         </a>|}
     (escape_html d.url)
     (escape_html d.label)
-    Svg.download_icon
+    Svg.view_icon
     (escape_html d.label)
 ;;
 
@@ -353,7 +352,7 @@ let generate_project_page config (project : Config.project) =
     | downloads ->
       Printf.sprintf
         {|    <div class="project-meta-item">
-      <strong>Downloads</strong>
+      <strong>Documents</strong>
       <div class="project-downloads-list">
 %s
       </div>
@@ -467,7 +466,7 @@ let generate_home_page projects =
   </p>
 
   <div class="bio-actions">
-    <a href="/resume.pdf" class="btn-bio" id="btn-download-resume" target="_blank" rel="noopener noreferrer" download title="Download Resume (PDF)">
+    <a href="/resume.pdf" class="btn-bio" id="btn-view-resume" target="_blank" rel="noopener noreferrer" title="Open the resume (PDF)">
 %s
       <span>Resume (PDF)</span>
     </a>
@@ -503,7 +502,7 @@ let generate_home_page projects =
       (escape_html Content.bio_subtitle)
       Content.bio_lead
       Content.bio_text
-      Svg.download_icon
+      Svg.view_icon
       Config.github_user
       Svg.github_icon
       cards

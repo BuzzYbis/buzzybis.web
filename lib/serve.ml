@@ -319,9 +319,10 @@ let serve_cached_pdf oc ~meth ~config ~(project : Config.project) route =
          ~cached_dir
          ~pdf_filename:route.pdf_filename
          ~full_path:pdf_path);
+    (* Shown in the browser's PDF viewer, which offers its own download. *)
     let extra =
       [ ( "Content-Disposition"
-        , Printf.sprintf "attachment; filename=\"%s\"" route.pdf_filename )
+        , Printf.sprintf "inline; filename=\"%s\"" route.pdf_filename )
       ]
     in
     respond_file oc ~meth ~extra pdf_path
