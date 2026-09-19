@@ -34,7 +34,10 @@ build:
 		done; \
 		rm -rf "$(SITE_TMP)/project/$$proj/html/cached_pdf"; \
 	done
-	soupault --site-dir $(SITE_TMP) --build-dir $(BUILD_DIR)
+	# Generated pages may change without Soupault observing a source mtime change
+	# (for example immediately after a git checkout). Force publication so a
+	# production rebuild can never reuse stale cached HTML.
+	soupault --force --site-dir $(SITE_TMP) --build-dir $(BUILD_DIR)
 	rm -rf $(SITE_TMP)
 
 # Fetch blog posts from GitHub; only recompiles projects whose remote changed.
